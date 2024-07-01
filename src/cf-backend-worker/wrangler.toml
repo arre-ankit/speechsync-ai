@@ -1,8 +1,7 @@
 #:schema node_modules/wrangler/config-schema.json
-name = "cf-ai-worker"
+name = "cf-backend-worker"
 main = "src/index.ts"
 compatibility_date = "2024-06-20"
-compatibility_flags = ["nodejs_compat"]
 
 # Automatically place your workloads in an optimal location to minimize latency.
 # If you are running back-end logic in a Worker, running it closer to your back-end infrastructure
