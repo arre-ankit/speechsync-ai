@@ -2,6 +2,8 @@
 import React from 'react'
 import { useState } from 'react'
 
+export const runtime = 'edge'
+
 type Props = {}
 
 const Analysis = (props: Props) => {
@@ -19,7 +21,6 @@ const Analysis = (props: Props) => {
           <button onClick={audioAnalysis}>Get Analysis</button>
           <pre>{JSON.stringify(analysis, null, 2)}</pre>
         </div>
-      
   )
 }
 

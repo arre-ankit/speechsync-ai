@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 
+export const runtime = 'edge'
+
 const ReactMediaRecorder = dynamic(
   () => import('react-media-recorder').then((mod) => mod.ReactMediaRecorder),
   { ssr: false }
