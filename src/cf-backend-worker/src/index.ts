@@ -1,6 +1,5 @@
-import { z } from 'zod'
-import { zValidator } from '@hono/zod-validator'
 import { Hono } from 'hono'
+import { cors } from 'hono/cors'
 
 
 type Bindings = {
@@ -8,6 +7,8 @@ type Bindings = {
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
+
+app.use(cors())
 
 
 app.get('/', async (c) => {
@@ -19,19 +20,16 @@ let audioAnalysisResult = {};
 let userVTT = "";
 let realAudio = "";
 
-app.get('/audio', async (c) => {
-  // URL to the audio file in the public directory
-  const audioUrl = 'https://github.com/Azure-Samples/cognitive-services-speech-sdk/raw/master/samples/cpp/windows/console/samples/enrollment_audio_katie.wav';
+app.post('/audio', async (c) => {
+  const formData = await c.req.formData();
+  const audioFile = formData.get('audio') as File;
 
-  // Fetch the audio file
-  const res = await fetch(audioUrl);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch audio: ${res.statusText}`);
+  if (!audioFile) {
+    return c.json({ error: 'No audio file provided' }, 400);
   }
 
-  // Convert the response to a Blob, then to an ArrayBuffer, and finally to a Uint8Array
-  const blob = await res.blob();
-  const arrayBuffer = await blob.arrayBuffer();
+  // Convert the file to ArrayBuffer
+  const arrayBuffer = await audioFile.arrayBuffer();
   const audioArray = new Uint8Array(arrayBuffer);
 
   // Use the Uint8Array as input for the Cloudflare Worker AI
@@ -51,11 +49,6 @@ app.get('/audio', async (c) => {
   // Return the AI's response
   return c.json(answer);
 });
-
-
-
-
-
 
 
 app.get('/analysis', async (c) => {
