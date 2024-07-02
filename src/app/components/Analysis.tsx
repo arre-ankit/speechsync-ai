@@ -10,7 +10,7 @@ const Analysis = (props: Props) => {
     const [analysis, setAnalysis] = useState(null);
     // Now get the analysis
     const audioAnalysis = async () =>{
-        const analysisResponse = await fetch('http://localhost:8787/analysis');
+        const analysisResponse = await fetch('https://cf-backend-worker.ankit992827.workers.dev/analysis');
         const analysisResult = await analysisResponse.json();
         setAnalysis(analysisResult as any);
     }

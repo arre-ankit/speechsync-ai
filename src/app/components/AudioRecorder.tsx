@@ -19,7 +19,7 @@ const AudioRecorder = () => {
       const formData = new FormData();
       formData.append('audio', blob, 'audio.webm');
 
-      const serverResponse = await fetch('http://localhost:8787/audio', {
+      const serverResponse = await fetch('https://cf-backend-worker.ankit992827.workers.dev/audio', {
         method: 'POST',
         body: formData,
       });
