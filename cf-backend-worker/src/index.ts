@@ -33,7 +33,9 @@ app.post('/audio', async (c) => {
   const audioArray = new Uint8Array(arrayBuffer);
 
   // Use the Uint8Array as input for the Cloudflare Worker AI
+  
   const input = {
+    //@ts-ignore
     audio: [...audioArray],
   };
 
