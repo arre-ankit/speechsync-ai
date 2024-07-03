@@ -5,6 +5,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
+import Analysis from "./Analysis";
 
 export const runtime = 'edge'
 
@@ -21,7 +22,7 @@ const ReactMediaRecorder = dynamic(
       const formData = new FormData();
       formData.append('audio', blob, 'audio.webm');
 
-      const serverResponse = await fetch('https://cf-backend-worker.ankit992827.workers.dev/audio', {
+      const serverResponse = await fetch('http://127.0.0.1:8787/audio', {
         method: 'POST',
         body: formData,
       });
@@ -38,19 +39,32 @@ const ReactMediaRecorder = dynamic(
   };
 
 
-export default function Component() {
+export default function AudioRecorder() {
     const [isRecording, setIsRecording] = useState(false)
   return (
     <ReactMediaRecorder
-        audio
-        render={({ status, startRecording, stopRecording, mediaBlobUrl }) => (
-            
-            <div className="flex min-h-screen w-full flex-col bg-background">
+      audio
+      render={({ status, startRecording, stopRecording, mediaBlobUrl }) => (
+        <div className={`flex min-h-screen w-full flex-col bg-background`}>
+          <main className="flex flex-1 items-center justify-center p-4 sm:p-6 md:p-8"></main>
             <main className="flex flex-1 items-center justify-center p-4 sm:p-6 md:p-8">
               <Card className="flex w-full max-w-md flex-col items-center gap-6 p-6 sm:p-8">
               <p>{status}</p>
                 <div className="flex h-24 w-24 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                  {isRecording? <CircleStopIcon className="h-12 w-12" /> : <MicIcon className="h-12 w-12" />}
+                  {isRecording? <CircleStopIcon onClick={() => {
+                    if(isRecording){
+                        stopRecording()
+                    }
+                    setIsRecording(!isRecording) 
+                    }} className="h-10 w-10" /> : <MicIcon onClick={() => {
+                    if (isRecording){
+                        stopRecording()
+                    }
+                    else{
+                        startRecording()
+                    }
+                    setIsRecording(!isRecording) 
+                    }} className="h-10 w-10" />}
                 </div>
                 <div className="grid gap-2 text-center">
                   <CardTitle>{isRecording ? "Stop Recording" : "Start Recording"}</CardTitle>
@@ -76,21 +90,13 @@ export default function Component() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <Button onClick={() => {
-                    if (isRecording){
-                        stopRecording()
-                    }
-                    else{
-                        startRecording()
-                    }
-                    setIsRecording(!isRecording) 
-                    }} >
-                  {isRecording ? "Stop Recording" : "Start Recording"}</Button>
-                  <a href={mediaBlobUrl} download="audio.webm">Download Audio</a>
+                  <audio className="w-full" src={mediaBlobUrl} controls />
+                  <a className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow" href={mediaBlobUrl} download="audio.webm">Download Audio</a>
                   <Button variant="secondary" onClick={() => sendAudioToServer(mediaBlobUrl)} disabled={!mediaBlobUrl}>
-                    Process Audio & Analysis
+                    Process Audio
                   </Button>
                 </div>
+                <Analysis />
               </Card>
             </main>
           </div>

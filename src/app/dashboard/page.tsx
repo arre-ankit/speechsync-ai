@@ -11,7 +11,6 @@ const Dashboard = (props: Props) => {
   return (
     <div>
         <AudioRecorder />
-        <Analysis />
     </div>
   )
 }
