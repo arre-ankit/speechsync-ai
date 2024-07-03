@@ -11,7 +11,7 @@ const Analysis = (props: Props) => {
 
     const audioAnalysis = async () => {
         try {
-            const analysisResponse = await fetch('http://127.0.0.1:8787/analysis');
+            const analysisResponse = await fetch('https://cf-backend-worker.ankit992827.workers.dev/analysis');
             const analysisResult:any = await analysisResponse.json();
             
             // Extract the 'response' field if it exists, otherwise use the entire result
