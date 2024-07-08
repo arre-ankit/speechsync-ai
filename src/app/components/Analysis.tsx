@@ -8,14 +8,17 @@ type Props = {}
 
 const Analysis = (props: Props) => {
     const [analysis, setAnalysis] = useState<string | null>(null);
+    const [isProcessing, setIsProcessing] = useState(false)
 
     const audioAnalysis = async () => {
         try {
+            setIsProcessing(true);
             const analysisResponse = await fetch('https://cf-backend-worker.ankit992827.workers.dev/analysis');
             const analysisResult:any = await analysisResponse.json();
             
             // Extract the 'response' field if it exists, otherwise use the entire result
             const responseText = analysisResult.response || JSON.stringify(analysisResult, null, 2);
+            setIsProcessing(false);
             setAnalysis(responseText);
         } catch (error) {
             console.error('Error fetching analysis:', error);
@@ -26,7 +29,16 @@ const Analysis = (props: Props) => {
     return (
         <div className='p-2 flex flex-col items-center justify-center'>
             <h2>Analysis Result:</h2>
-            <Button onClick={audioAnalysis}>Get Analysis</Button>
+            <Button onClick={audioAnalysis} disabled={isProcessing}>
+            {isProcessing ? (
+                <div className="flex items-center justify-center">
+                    <div className="mr-2" />
+                        Analysing...
+                      </div>
+                    ) : 
+                      "Get Analysis"
+                    }
+            </Button>
             {analysis && (
                 <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
                     {analysis}

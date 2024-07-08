@@ -14,33 +14,39 @@ const ReactMediaRecorder = dynamic(
   { ssr: false }
 );
 
-  const sendAudioToServer = async (mediaBlobUrl:any) => {
-    try {
-      const response = await fetch(mediaBlobUrl);
-      const blob = await response.blob();
-      
-      const formData = new FormData();
-      formData.append('audio', blob, 'audio.webm');
-
-      const serverResponse = await fetch('https://cf-backend-worker.ankit992827.workers.dev/audio', {
-        method: 'POST',
-        body: formData,
-      });
-      
-      if (!serverResponse.ok) {
-        throw new Error('Server response was not ok');
-      }
-
-      const result = await serverResponse.json();
-      console.log("Audio processing result:", result);
-    } catch (error) {
-      console.error('Error processing audio:', error);
-    }
-  };
-
 
 export default function AudioRecorder() {
     const [isRecording, setIsRecording] = useState(false)
+    const [isProcessing, setIsProcessing] = useState(false)
+    const [isprocessSuccess, setIsProcessSuccess] = useState("")
+
+    const sendAudioToServer = async (mediaBlobUrl:any) => {
+      try {
+        setIsProcessing(true);
+        const response = await fetch(mediaBlobUrl);
+        const blob = await response.blob();
+        
+        const formData = new FormData();
+        formData.append('audio', blob, 'audio.webm');
+  
+        const serverResponse = await fetch('https://cf-backend-worker.ankit992827.workers.dev/audio', {
+          method: 'POST',
+          body: formData,
+        });
+        setIsProcessing(false);
+        setIsProcessSuccess("Audio processed successfully!")
+        
+        if (!serverResponse.ok) {
+          throw new Error('Server response was not ok');
+        }
+  
+        const result = await serverResponse.json();
+        console.log("Audio processing result:", result);
+      } catch (error) {
+        console.error('Error processing audio:', error);
+      }
+    };
+
   return (
     <ReactMediaRecorder
       audio
@@ -90,20 +96,30 @@ export default function AudioRecorder() {
                       </SelectContent>
                     </Select>
                   </div>
+                </div>
                   <audio className="w-full" src={mediaBlobUrl} controls />
                   <a className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow" href={mediaBlobUrl} download="audio.webm">Download Audio</a>
-                  <Button variant="secondary" onClick={() => sendAudioToServer(mediaBlobUrl)} disabled={!mediaBlobUrl}>
-                    Process Audio
+                  <Button variant="secondary" onClick={() => sendAudioToServer(mediaBlobUrl)} disabled={!mediaBlobUrl && isProcessing} >
+                    {isProcessing ? (
+                      <div className="flex items-center justify-center">
+                        <div className="mr-2" />
+                        Processing...
+                      </div>
+                    ) : 
+                      "Process Audio"
+                    }
                   </Button>
-                </div>
+                  {isprocessSuccess && (
+                  <div className="mt-4 bg-muted p-4 rounded-md">
+                    <p className="text-muted-foreground">{isprocessSuccess}</p>
+                  </div>
+                )}
                 <Analysis />
               </Card>
             </main>
           </div>
         )}
       />
-      
-    
   )
 }
 
