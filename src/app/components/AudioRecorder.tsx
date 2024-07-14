@@ -5,7 +5,9 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
-import Analysis from "./Analysis";
+import { useRouter } from 'next/navigation'
+import { Loader } from '@/app/components/Loader'
+import { LoadingOverlay } from '@/app/components/LoadingOverlay'
 
 export const runtime = 'edge'
 
@@ -16,25 +18,26 @@ const ReactMediaRecorder = dynamic(
 
 
 export default function AudioRecorder() {
+    const router = useRouter()
+    const [isLoading, setIsLoading] = useState(false)
     const [isRecording, setIsRecording] = useState(false)
-    const [isProcessing, setIsProcessing] = useState(false)
-    const [isprocessSuccess, setIsProcessSuccess] = useState("")
+    const [audioProcessState, setaudioProcessState] = useState("")
+    const [analysis, setAnalysis] = useState<string | null>(null);
+    
 
     const sendAudioToServer = async (mediaBlobUrl:any) => {
       try {
-        setIsProcessing(true);
         const response = await fetch(mediaBlobUrl);
         const blob = await response.blob();
         
         const formData = new FormData();
         formData.append('audio', blob, 'audio.webm');
   
-        const serverResponse = await fetch('https://cf-backend-worker.ankit992827.workers.dev/audio', {
+        const serverResponse = await fetch('http://127.0.0.1:8787/audio', {
           method: 'POST',
           body: formData,
         });
-        setIsProcessing(false);
-        setIsProcessSuccess("Audio processed successfully!")
+        setaudioProcessState("Audio processed successfully! Wait for Analysis.")
         
         if (!serverResponse.ok) {
           throw new Error('Server response was not ok');
@@ -47,79 +50,113 @@ export default function AudioRecorder() {
       }
     };
 
+    const audioAnalysis = async () => {
+      try {
+          const analysisResponse = await fetch('http://127.0.0.1:8787/analysis');
+          const analysisResult:any = await analysisResponse.json();
+          
+          // Extract the 'response' field if it exists, otherwise use the entire result
+          const responseText = analysisResult.response || JSON.stringify(analysisResult, null, 2);
+          setAnalysis(responseText);
+      } catch (error) {
+          console.error('Error fetching analysis:', error);
+          setAnalysis('Error fetching analysis. Please try again.');
+      }
+
+    }
+
+
   return (
-    <ReactMediaRecorder
-      audio
-      render={({ status, startRecording, stopRecording, mediaBlobUrl }) => (
-        <div className={`flex min-h-screen w-full flex-col bg-background`}>
-          <main className="flex flex-1 items-center justify-center p-4 sm:p-6 md:p-8"></main>
-            <main className="flex flex-1 items-center justify-center p-4 sm:p-6 md:p-8">
-              <Card className="flex w-full max-w-md flex-col items-center gap-6 p-6 sm:p-8">
-              <p>{status}</p>
-                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                  {isRecording? <CircleStopIcon onClick={() => {
-                    if(isRecording){
-                        stopRecording()
-                    }
-                    setIsRecording(!isRecording) 
-                    }} className="h-10 w-10" /> : <MicIcon onClick={() => {
-                    if (isRecording){
-                        stopRecording()
-                    }
-                    else{
-                        startRecording()
-                    }
-                    setIsRecording(!isRecording) 
-                    }} className="h-10 w-10" />}
-                </div>
-                <div className="grid gap-2 text-center">
-                  <CardTitle>{isRecording ? "Stop Recording" : "Start Recording"}</CardTitle>
-                  <CardDescription>{isRecording
-                ? "Click the stop icon to end your recording."
-                : "Click the microphone icon to begin recording your audio."}</CardDescription>
-                </div>
-                <div className="grid w-full gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="topic" className="text-base">
-                      What topic would you like to speak about?
-                    </Label>
-                    <Select defaultValue="technology">
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select a topic" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="technology">Technology</SelectItem>
-                        <SelectItem value="science">Science</SelectItem>
-                        <SelectItem value="history">History</SelectItem>
-                        <SelectItem value="literature">Literature</SelectItem>
-                        <SelectItem value="current-events">Current Events</SelectItem>
-                      </SelectContent>
-                    </Select>
+    <>
+      {isLoading && <LoadingOverlay />}
+      <ReactMediaRecorder
+        audio
+        render={({ status, startRecording, stopRecording, mediaBlobUrl }) => (
+          <div className={`flex min-h-screen w-full flex-col bg-background`}>
+            <main className="flex flex-1 items-center justify-center p-4 sm:p-6 md:p-8"></main>
+              <main className="flex flex-1 items-center justify-center p-4 sm:p-6 md:p-8">
+                <Card className="flex w-full max-w-md flex-col items-center gap-6 p-6 sm:p-8">
+                <p>{status}</p>
+                  <div className="flex h-24 w-24 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                    {isRecording? <CircleStopIcon onClick={() => {
+                      if(isRecording){
+                          stopRecording()
+                      }
+                      setIsRecording(!isRecording) 
+                      }} className="h-10 w-10" /> : <MicIcon onClick={() => {
+                      if (isRecording){
+                          stopRecording()
+                      }
+                      else{
+                          startRecording()
+                      }
+                      setIsRecording(!isRecording) 
+                      }} className="h-10 w-10" />}
                   </div>
-                </div>
-                  <audio className="w-full" src={mediaBlobUrl} controls />
-                  <a className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow" href={mediaBlobUrl} download="audio.webm">Download Audio</a>
-                  <Button variant="secondary" onClick={() => sendAudioToServer(mediaBlobUrl)} disabled={!mediaBlobUrl && isProcessing} >
-                    {isProcessing ? (
-                      <div className="flex items-center justify-center">
-                        <div className="mr-2" />
-                        Processing...
+                  <div className="grid gap-2 text-center">
+                    <CardTitle>{isRecording ? "Stop Recording" : "Start Recording"}</CardTitle>
+                    <CardDescription>{isRecording
+                  ? "Click the stop icon to end your recording."
+                  : "Click the microphone icon to begin recording your audio."}</CardDescription>
+                  </div>
+                  <div className="grid w-full gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="topic" className="text-base">
+                        What topic would you like to speak about?
+                      </Label>
+                      <Select defaultValue="technology">
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select a topic" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="technology">Technology</SelectItem>
+                          <SelectItem value="science">Science</SelectItem>
+                          <SelectItem value="history">History</SelectItem>
+                          <SelectItem value="literature">Literature</SelectItem>
+                          <SelectItem value="current-events">Current Events</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                    <audio className="w-full" src={mediaBlobUrl} controls />
+                    <a className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow" href={mediaBlobUrl} download="audio.webm">Download Audio</a>
+                    <Button variant="secondary" onClick={async () => {
+                      setIsLoading(true);
+                      try {
+                        await Promise.all([
+                          sendAudioToServer(mediaBlobUrl),
+                          audioAnalysis()
+                        ]);
+                      } catch (error) {
+                        console.error("Error processing audio:", error);
+                      } finally {
+                        
+                        setIsLoading(false);
+                        router.push(`/analysis?data=abc`);
+                      }
+                      }} disabled={!mediaBlobUrl} >
+                        Process and Analyse
+                    </Button>
+                    {audioProcessState && (
+                    <div>
+                      <div className="mt-4 bg-muted p-4 rounded-md">
+                        <p className="text-muted-foreground">{audioProcessState}</p>
                       </div>
-                    ) : 
-                      "Process Audio"
-                    }
-                  </Button>
-                  {isprocessSuccess && (
-                  <div className="mt-4 bg-muted p-4 rounded-md">
-                    <p className="text-muted-foreground">{isprocessSuccess}</p>
-                  </div>
-                )}
-                <Analysis />
-              </Card>
-            </main>
-          </div>
-        )}
-      />
+                      <div className="flex items-center justify-center">
+                      <div className="mr-2" />
+                        <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+                              {analysis}
+                          </pre>
+                      </div>
+                    </div>
+                  )}
+                </Card>
+              </main>
+            </div>
+          )}
+        />
+    </>
+    
   )
 }
 

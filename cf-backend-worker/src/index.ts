@@ -40,7 +40,7 @@ app.post('/audio', async (c) => {
   };
 
   // Assuming `c.env.AI.run` is the method to call the AI with the audio input
-  const answer = await c.env.AI.run('@cf/openai/whisper', input);
+  const answer = await c.env.AI.run('@cf/openai/whisper-tiny-en', input);
 
   audioAnalysisResult = answer;
   realAudio += answer.text;
@@ -64,42 +64,11 @@ app.get('/analysis', async (c) => {
         messages: [
           { 
             role: "system", 
-            content: `You are an AI language analysis assistant specializing in English pronunciation and speech evaluation. Your task is to analyze audio transcriptions, identify pronunciation errors, assess overall language proficiency, and provide constructive feedback. Use your expertise in phonetics, linguistics, and language learning to offer detailed, accurate, and helpful analyses. Your responses should be clear, structured, and tailored to help non-native English speakers improve their pronunciation and speaking skills.The speaker will speak in english.
-            Analyze the provided VTT audio transcription and real audio translation to evaluate the speaker's English pronunciation and accuracy. Perform the following steps Compare the "vtt" section (transcription) ${userVTT} with the "text" section ${realAudio} (real translation) Don't show this result in response just use it as internally to determine the good out and comparision.
-      
-            Identify words in the "vtt" section that differ from the corresponding words in the "text" section.
-      
-            Evaluate the overall quality of the speaker's English:
-            a. Assess whether the speaker is using correct English grammar and vocabulary.
-            b. Determine if the speaker's pronunciation is generally good or needs improvement.
-      
-            Create a list of words that are pronounced incorrectly, based on the differences between the "vtt" and "text" sections.
-      
-            For each mispronounced word:
-            a. Provide the incorrect pronunciation (from "vtt").
-            b. Provide the correct pronunciation (from "text").
-            c. Explain briefly why the pronunciation is considered incorrect.
-      
-            Summarize the findings:
-            a. Overall assessment of the speaker's English proficiency.
-            b. Percentage of words pronounced correctly vs. incorrectly.
-            c. Patterns in pronunciation errors (e.g., consistent issues with certain sounds or word types).
-      
-            Provide recommendations for improvement:
-            a. Suggest specific areas of focus for the speaker to enhance their pronunciation.
-            b. Recommend exercises or techniques to address the identified issues.
-      
-            Output:
-            Present the analysis in a clear, structured format, including:
-      
-            Overall evaluation
-            List of mispronounced words with correct pronunciations
-            Summary of findings
-            Recommendations for improvement`
+            content:`You are an AI language analysis assistant specializing in English pronunciation and speech evaluation. Your task is to analyze English audio transcriptions, identify pronunciation errors, assess overall language proficiency, and provide constructive feedback. Use your expertise in English phonetics, linguistics, and language learning to offer detailed, accurate, and helpful analyses. Your responses should be clear, structured, and tailored to help improve English pronunciation and speaking skills. The speaker will speak only in English. Analyze the provided transcriptions by comparing the \"vtt\" section (${userVTT}) with the \"text\" section (${realAudio}). Identify any discrepancies between these two as potential pronunciation errors. Your output must be a JSON object containing the following keys:\n\n1. 'mispronouncedWords': An array of objects, each containing 'incorrect' (string from vtt), 'correct' (string from text), and 'reason' (string explaining the pronunciation error).\n2. 'summary': An object with 'correctPercentage' (number), 'incorrectPercentage' (number), and 'patterns' (array of strings describing observed error patterns in English pronunciation).\n3. 'recommendations': An array of strings with suggestions for improving English pronunciation.\n\nOnly consider English words and pronunciations. Do not include or consider any non-English languages in your analysis.`
           },
           { 
             role: "user", 
-            content: `Give resluts`
+            content: "Analyze the following transcription and provide the results in the specified JSON format:\n\n[Insert transcription here]"
           }
         ]
       }

@@ -1,6 +1,3 @@
-import Image from "next/image";
-import AudioRecorder from "./components/AudioRecorder";
-import Analysis from "./components/Analysis";
 import LandingPage from "./components/LandingPage"
 
 
