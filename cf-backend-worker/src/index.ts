@@ -124,7 +124,7 @@ app.get('/analysis', async (c) => {
           },
           { 
             role: "user", 
-            content: "Analyze the following transcription and provide the results in the specified JSON format:\n\n[Insert transcription here]"
+            content: "Analyze the audio transcription and provide feedback.Based on the system message, analyze the audio transcription and provide feedback.Give response in JSON format."
           }
         ]
       }
