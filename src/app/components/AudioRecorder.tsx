@@ -6,7 +6,6 @@ import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation'
-import { Loader } from '@/app/components/Loader'
 import { LoadingOverlay } from '@/app/components/LoadingOverlay'
 
 export const runtime = 'edge'
@@ -21,7 +20,6 @@ export default function AudioRecorder() {
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(false)
     const [isRecording, setIsRecording] = useState(false)
-    const [audioProcessState, setaudioProcessState] = useState("")
     const [analysis, setAnalysis] = useState<string | null>(null);
     
 
@@ -33,11 +31,10 @@ export default function AudioRecorder() {
         const formData = new FormData();
         formData.append('audio', blob, 'audio.webm');
   
-        const serverResponse = await fetch('http://127.0.0.1:8787/audio', {
+        const serverResponse = await fetch('https://cf-backend-worker.ankit992827.workers.dev/audio', {
           method: 'POST',
           body: formData,
         });
-        setaudioProcessState("Audio processed successfully! Wait for Analysis.")
         
         if (!serverResponse.ok) {
           throw new Error('Server response was not ok');
@@ -52,12 +49,13 @@ export default function AudioRecorder() {
 
     const audioAnalysis = async () => {
       try {
-          const analysisResponse = await fetch('http://127.0.0.1:8787/analysis');
+          const analysisResponse = await fetch('https://cf-backend-worker.ankit992827.workers.dev/analysis');
           const analysisResult:any = await analysisResponse.json();
           
           // Extract the 'response' field if it exists, otherwise use the entire result
           const responseText = analysisResult.response || JSON.stringify(analysisResult, null, 2);
           setAnalysis(responseText);
+          return responseText;
       } catch (error) {
           console.error('Error fetching analysis:', error);
           setAnalysis('Error fetching analysis. Please try again.');
@@ -123,33 +121,24 @@ export default function AudioRecorder() {
                     <Button variant="secondary" onClick={async () => {
                       setIsLoading(true);
                       try {
-                        await Promise.all([
-                          sendAudioToServer(mediaBlobUrl),
-                          audioAnalysis()
-                        ]);
+                        await sendAudioToServer(mediaBlobUrl);
+                        const analysisResult = await audioAnalysis();
+                        localStorage.setItem('audioAnalysis', analysisResult || '');
                       } catch (error) {
                         console.error("Error processing audio:", error);
                       } finally {
-                        
                         setIsLoading(false);
-                        router.push(`/analysis?data=abc`);
+                        router.push(`/analysis`);
                       }
                       }} disabled={!mediaBlobUrl} >
                         Process and Analyse
                     </Button>
-                    {audioProcessState && (
-                    <div>
-                      <div className="mt-4 bg-muted p-4 rounded-md">
-                        <p className="text-muted-foreground">{audioProcessState}</p>
-                      </div>
-                      <div className="flex items-center justify-center">
+                    <div className="flex items-center justify-center">
                       <div className="mr-2" />
                         <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
                               {analysis}
                           </pre>
-                      </div>
                     </div>
-                  )}
                 </Card>
               </main>
             </div>
