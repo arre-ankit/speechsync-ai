@@ -45,6 +45,7 @@ export default function AnalysisPage() {
             console.error('Error parsing stored analysis:', error);
         }
         }
+        localStorage.clear();
 
     }, []);
 
