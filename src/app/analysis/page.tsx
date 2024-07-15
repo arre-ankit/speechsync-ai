@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
+export const runtime = 'edge'
+
 interface AnalysisJsonType {
   mispronouncedWords: any[]; // Since it's an array with length 0, it's unclear what type of elements it should contain.
   recommendations: string[];

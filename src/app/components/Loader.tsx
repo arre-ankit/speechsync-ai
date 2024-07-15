@@ -2,6 +2,8 @@ import React from 'react'
 import { Progress } from '@/components/ui/progress'
 import { useState } from 'react'
 
+export const runtime = 'edge'
+
 type Props = {}
 
 export const Loader = () => {
