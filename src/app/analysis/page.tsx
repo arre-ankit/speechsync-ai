@@ -4,11 +4,16 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
 
 export const runtime = 'edge'
 
 interface AnalysisJsonType {
-  mispronouncedWords: any[]; // Since it's an array with length 0, it's unclear what type of elements it should contain.
+  mispronouncedWords: Array<{
+    correct: string;
+    incorrect: string;
+    reason: string;
+  }>;
   recommendations: string[];
   summary: {
     correctPercentage: number;
@@ -20,35 +25,56 @@ interface AnalysisJsonType {
 
 export default function AnalysisPage() {
     const [analysisJson, setAnalysisJson] = useState<AnalysisJsonType>({} as any);
+    const [audioUrl, setAudioUrl] = useState<string | null>(null);
     const router = useRouter();
   
     useEffect(() => {
       const storedAnalysis = localStorage.getItem('audioAnalysis');
+    
       if (storedAnalysis) {
         try {
-          // Try to extract only the JSON part
-          const jsonStart = storedAnalysis.indexOf('{');
-          const jsonEnd = storedAnalysis.lastIndexOf('}') + 1;
-  
-          if (jsonStart !== -1 && jsonEnd !== -1) {
-            const validJsonString = storedAnalysis.substring(jsonStart, jsonEnd);
-            const parsedJson = JSON.parse(validJsonString);
-            setAnalysisJson(parsedJson);
-            console.log('Parsed JSON:', parsedJson);
-            localStorage.clear();
-          } 
-        else {
-            console.error('No JSON found in stored analysis:', storedAnalysis);
+          console.log('Raw stored analysis:', storedAnalysis);
+    
+          // Parse the initial JSON data
+          const parsedData = JSON.parse(storedAnalysis);
+    
+          if (parsedData && parsedData.analysis) {
+            // Extract the analysis property
+            const analysisString = parsedData.analysis;
+    
+            // Use regex to extract the JSON object from the analysis string
+            const jsonMatch = analysisString.match(/{[\s\S]*}/);
+    
+            if (jsonMatch) {
+              const analysisData = JSON.parse(jsonMatch[0]);
+    
+              // Set the parsed analysis data
+              setAnalysisJson(analysisData);
+              console.log('Set analysis JSON:', analysisData);
+            } else {
+              console.warn('No JSON object found in analysis property');
+            }
+    
+            // Set the audioUrl if it exists
+            if (parsedData.audioUrl) {
+              setAudioUrl(parsedData.audioUrl);
+              console.log('Set audio URL:', parsedData.audioUrl);
+            } else {
+              console.warn('No "audioUrl" property found in parsed data');
+            }
+          } else {
+            console.warn('No "analysis" property found in parsed data');
+          }
+        } catch (error) {
+          console.error('Error processing stored analysis:', error);
         }
-        } 
-        catch (error) {
-            console.error('Error parsing stored analysis:', error);
-        }
-        }
-        localStorage.clear();
-
+      } else {
+        console.log('No stored analysis found in localStorage');
+      }
+      localStorage.clear();
     }, []);
-
+    
+    
   return (
     <div className="flex flex-col min-h-screen w-full">
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
@@ -99,6 +125,38 @@ export default function AnalysisPage() {
           </div>
           <Card className="flex flex-col">
             <CardHeader>
+              <CardTitle>Mispronounced Words</CardTitle>
+              <CardDescription>
+                A table of the most commonly mispronounced words and their correct pronunciations.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Correct Pronunciation</TableHead>
+                    <TableHead>Incorrect Pronunciation</TableHead>
+                    <TableHead>Reason</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {analysisJson?.mispronouncedWords?.map((item) => (
+                    <TableRow key={item.correct || item.incorrect}>
+                      <TableCell>{item.correct}</TableCell>
+                      <TableCell>{item.incorrect}</TableCell>
+                      <TableCell>{item.reason}</TableCell>
+                    </TableRow>
+                  )) || (
+                    <TableRow>
+                      <TableCell colSpan={3}>No mispronounced words found.</TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+          <Card className="flex flex-col">
+            <CardHeader>
               <CardTitle>Pronunciation Improvement Recommendations</CardTitle>
             </CardHeader>
             <CardContent>
@@ -113,6 +171,9 @@ export default function AnalysisPage() {
                 )}
             </CardContent>
           </Card>
+          {audioUrl && (
+              <audio className="w-full" src={audioUrl} controls />
+        )}
         </div>
       </main>
     </div>

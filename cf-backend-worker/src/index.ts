@@ -47,7 +47,7 @@ app.post('/audio', async (c) => {
   };
 
   // Assuming `c.env.AI.run` is the method to call the AI with the audio input
-  const answer = await c.env.AI.run('@cf/openai/whisper-tiny-en', input)as AudioAnalysisResult;
+  const answer = await c.env.AI.run('@cf/openai/whisper', input)as AudioAnalysisResult;
 
   audioAnalysisResult = answer;
   realAudio += answer.text;
@@ -76,40 +76,39 @@ app.get('/analysis', async (c) => {
                     Analyze the provided transcriptions by comparing the "vtt" section (${userVTT}) with the "text" section (${realAudio}). Identify any discrepancies between these two as potential pronunciation errors. Your output must be a JSON object containing the following keys:
                     
                     mispronouncedWords: An array of objects, each containing:
-                    incorrect: A string from the vtt section.
-                    correct: A string from the text section.
-                    reason: A string explaining the pronunciation error.
+                    incorrect: A word from the vtt section that was mispronounced can be seen from ${userVTT}.
+                    correct: A word from the text section that was correct can be seen from ${realAudio}.
+                    reason: A string explaining the pronunciation error.Describe the specific phonetic or articulatory mistake made by the speaker.
                     
                     summary: An object with:
-                    correctPercentage: A number representing the percentage of correctly pronounced words.
-                    incorrectPercentage: A number representing the percentage of incorrectly pronounced words.
+                    correctPercentage: A number representing the percentage of correctly pronounced words.Can be calculated by dividing the number of correctly pronounced words by the total number of words and multiplying by 100.
+                    incorrectPercentage: A number representing the percentage of incorrectly pronounced words.Can be calculated by dividing the number of incorrectly pronounced words by the total number of words and multiplying by 100.
                     patterns: An array of strings describing observed error patterns in English pronunciation.
                     
-                    recommendations: An array of strings with suggestions for improving English pronunciation.
+                    recommendations: An array of strings with suggestions for improving English pronunciation.Suggent some great recommendations can be videos or blog posts or any other resources.
 
                     wordCount: A number representing the total number of words in the transcription.
 
                     Only consider English words and pronunciations. Do not include or consider any non-English languages in your analysis.
-                    Example JSON Output:
-
-                    json
-                    Copy code
+                    
+                    Don't copy paste the exaple format. Just give me JSON as a responce from you analysis in this format
+                    Examples format for JSON Output:
                     {
                         "mispronouncedWords": [
                             {
-                                "incorrect": "thier",
-                                "correct": "their",
-                                "reason": "Substituted the 'i' sound with an 'e' sound"
+                                "incorrect": " A word from the vtt section that was mispronounced can be seen from ${userVTT}",
+                                "correct": "A word from the text section that was correct can be seen from ${realAudio}",
+                                "reason": "A string explaining the pronunciation error.Describe the specific phonetic or articulatory mistake made by the speaker."
                             },
                             {
-                                "incorrect": "aks",
-                                "correct": "ask",
-                                "reason": "Reversed the 's' and 'k' sounds"
-                            }
+                                "incorrect": " A word from the vtt section that was mispronounced can be seen from ${userVTT}",
+                                "correct": "A word from the text section that was correct can be seen from ${realAudio}",
+                                "reason": "A string explaining the pronunciation error.Describe the specific phonetic or articulatory mistake made by the speaker."
+                            },
                         ],
                         "summary": {
-                            "correctPercentage": 90,
-                            "incorrectPercentage": 10,
+                            "correctPercentage": number calutated from correct words and total words,
+                            "incorrectPercentage": number calutated from incorrect words and total words,
                             "patterns": [
                                 "Vowel substitution errors",
                                 "Consonant reversal errors"
@@ -118,14 +117,12 @@ app.get('/analysis', async (c) => {
                         "recommendations": [
                             "Practice differentiating between similar vowel sounds",
                             "Focus on the correct order of consonants in commonly mispronounced words"
+                            "Blog links"....etc.
                         ],
                         "wordCount": ${wordCount}
                     }`
           },
-          { 
-            role: "user", 
-            content: "Analyze the audio transcription and provide feedback.Based on the system message, analyze the audio transcription and provide feedback.Give response in JSON format."
-          }
+          { role: "user", content: `Just give me JSON as a responce.Analyze the audio transcription and provide feedback on any pronunciation errors and give output in JSON format ${userVTT} & ${realAudio}` }
         ]
       }
        )

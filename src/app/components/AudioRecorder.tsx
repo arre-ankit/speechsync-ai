@@ -42,6 +42,7 @@ export default function AudioRecorder() {
   
         const result = await serverResponse.json();
         console.log("Audio processing result:", result);
+        return mediaBlobUrl;
       } catch (error) {
         console.error('Error processing audio:', error);
       }
@@ -121,9 +122,12 @@ export default function AudioRecorder() {
                     <Button variant="secondary" onClick={async () => {
                       setIsLoading(true);
                       try {
-                        await sendAudioToServer(mediaBlobUrl);
+                        const audioUrl = await sendAudioToServer(mediaBlobUrl);
                         const analysisResult = await audioAnalysis();
-                        localStorage.setItem('audioAnalysis', analysisResult || '');
+                        localStorage.setItem('audioAnalysis',  JSON.stringify({
+                          analysis: analysisResult,
+                          audioUrl: audioUrl
+                        }));
                       } catch (error) {
                         console.error("Error processing audio:", error);
                       } finally {
