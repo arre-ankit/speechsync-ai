@@ -124,10 +124,8 @@ export default function AudioRecorder() {
                       try {
                         const audioUrl = await sendAudioToServer(mediaBlobUrl);
                         const analysisResult = await audioAnalysis();
-                        localStorage.setItem('audioAnalysis',  JSON.stringify({
-                          analysis: analysisResult,
-                          audioUrl: audioUrl
-                        }));
+                        localStorage.setItem('audioAnalysis Result', analysisResult);
+                        localStorage.setItem('audioUrl', audioUrl);
                       } catch (error) {
                         console.error("Error processing audio:", error);
                       } finally {

@@ -1,10 +1,11 @@
-'use client'
+'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
+
 
 export const runtime = 'edge'
 
@@ -29,51 +30,34 @@ export default function AnalysisPage() {
     const router = useRouter();
   
     useEffect(() => {
-      const storedAnalysis = localStorage.getItem('audioAnalysis');
+      const storedAnalysisResult = localStorage.getItem('audioAnalysis Result');
+      const storedAudioUrl = localStorage.getItem('audioUrl');
     
-      if (storedAnalysis) {
-        try {
-          console.log('Raw stored analysis:', storedAnalysis);
-    
-          // Parse the initial JSON data
-          const parsedData = JSON.parse(storedAnalysis);
-    
-          if (parsedData && parsedData.analysis) {
-            // Extract the analysis property
-            const analysisString = parsedData.analysis;
-    
-            // Use regex to extract the JSON object from the analysis string
-            const jsonMatch = analysisString.match(/{[\s\S]*}/);
-    
-            if (jsonMatch) {
-              const analysisData = JSON.parse(jsonMatch[0]);
-    
-              // Set the parsed analysis data
-              setAnalysisJson(analysisData);
-              console.log('Set analysis JSON:', analysisData);
-            } else {
-              console.warn('No JSON object found in analysis property');
-            }
-    
-            // Set the audioUrl if it exists
-            if (parsedData.audioUrl) {
-              setAudioUrl(parsedData.audioUrl);
-              console.log('Set audio URL:', parsedData.audioUrl);
-            } else {
-              console.warn('No "audioUrl" property found in parsed data');
-            }
-          } else {
-            console.warn('No "analysis" property found in parsed data');
+      if (storedAnalysisResult) {
+        console.log("storedAnalysisResult", storedAnalysisResult);
+        console.log(typeof storedAnalysisResult);
+        
+        // Extract the JSON part from the stored string
+        const jsonMatch = storedAnalysisResult.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const jsonString = jsonMatch[0];
+          try {
+            const parsedJson = JSON.parse(jsonString);
+            console.log(parsedJson);
+            setAnalysisJson(parsedJson);
+          } catch (error) {
+            console.error("Error parsing JSON:", error);
           }
-        } catch (error) {
-          console.error('Error processing stored analysis:', error);
+        } else {
+          console.error("No valid JSON found in the stored result");
         }
-      } else {
-        console.log('No stored analysis found in localStorage');
       }
-      localStorage.clear();
-    }, []);
     
+      if (storedAudioUrl) {
+        setAudioUrl(storedAudioUrl);
+      }
+    }, []);
+
     
   return (
     <div className="flex flex-col min-h-screen w-full">
