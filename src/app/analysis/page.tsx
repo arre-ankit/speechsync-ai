@@ -57,7 +57,7 @@ export default function AnalysisPage() {
             .replace(/"recommendations":\s*\[(.*?)\]/g, (match, p1) => {
               // Fix the recommendations array
               //@ts-ignore
-              return `"recommendations": [${p1.split(',').map(item => `"${item.trim().replace(/^"|"$/g, '')}"`).join(',')}]`;
+              return `"recommendations": [${p1}]`;
             });
     
           try {
