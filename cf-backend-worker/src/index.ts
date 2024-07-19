@@ -14,8 +14,14 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>()
 
-app.use(cors())
-
+app.use(
+  '*', 
+  cors({
+    origin: '*',
+    allowMethods: ['GET', 'POST', 'OPTIONS'],
+    allowHeaders: ['Content-Type']
+  })
+);
 
 app.get('/', async (c) => {
   return c.json({ message: 'Hello, World!' })
