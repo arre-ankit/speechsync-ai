@@ -91,8 +91,8 @@ app.get('/analysis', async (c) => {
       }
     ],
     "summary": {
-      "correctPercentage": number,
-      "incorrectPercentage": number,
+      "correctPercentage": number in percentage (0-100),
+      "incorrectPercentage": number in percentage (0-100),
       "patterns": ["error pattern 1", "error pattern 2"]
     },
     "recommendations": ["recommendation 1", "recommendation 2"],

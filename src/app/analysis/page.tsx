@@ -35,18 +35,38 @@ export default function AnalysisPage() {
     
       if (storedAnalysisResult) {
         console.log("storedAnalysisResult", storedAnalysisResult);
-        console.log(typeof storedAnalysisResult);
         
         // Extract the JSON part from the stored string
         const jsonMatch = storedAnalysisResult.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
-          const jsonString = jsonMatch[0];
+          let jsonString = jsonMatch[0];
+          
+          // Clean the JSON string
+          jsonString = jsonString
+            .replace(/\s+/g, ' ')  // Replace multiple spaces with a single space
+            .replace(/,\s*]/g, ']')  // Remove trailing commas in arrays
+            .replace(/,\s*}/g, '}')  // Remove trailing commas in objects
+            .replace(/([a-zA-Z0-9_]+):/g, '"$1":')  // Ensure all keys are quoted
+            .replace(/"patterns":\s*\[(.*?)\]/g, (match, p1) => {
+              // Fix the patterns array
+              //@ts-ignore
+              return `"patterns": [${p1.split(',').map(item => {
+                return `"${item.trim().replace(/^"|"$/g, '').replace(/"(\d+)"/g, '$1')}"`;
+              }).join(',')}]`;
+            })
+            .replace(/"recommendations":\s*\[(.*?)\]/g, (match, p1) => {
+              // Fix the recommendations array
+              //@ts-ignore
+              return `"recommendations": [${p1.split(',').map(item => `"${item.trim().replace(/^"|"$/g, '')}"`).join(',')}]`;
+            });
+    
           try {
-            const parsedJson = JSON.parse(jsonString);
-            console.log(parsedJson);
+            const parsedJson: AnalysisJsonType = JSON.parse(jsonString);
+            console.log("Parsed JSON:", parsedJson);
             setAnalysisJson(parsedJson);
           } catch (error) {
             console.error("Error parsing JSON:", error);
+            console.log("Problematic JSON string:", jsonString);
           }
         } else {
           console.error("No valid JSON found in the stored result");
@@ -57,7 +77,6 @@ export default function AnalysisPage() {
         setAudioUrl(storedAudioUrl);
       }
     }, []);
-
     
   return (
     <div className="flex flex-col min-h-screen w-full">
