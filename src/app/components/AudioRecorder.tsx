@@ -7,6 +7,9 @@ import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation'
 import { LoadingOverlay } from '@/app/components/LoadingOverlay'
+import { ModeToggle } from "./Togglemode";
+
+
 
 export const runtime = 'edge'
 
@@ -72,6 +75,15 @@ export default function AudioRecorder() {
         audio
         render={({ status, startRecording, stopRecording, mediaBlobUrl }) => (
           <div className={`flex min-h-screen w-full flex-col bg-background`}>
+            <div className="flex justify-between p-5">
+                <Button variant="outline" size="icon" onClick={()=>{
+                router.push('/');
+                }}>
+                <ArrowLeftIcon className="h-4 w-4" />
+                <span className="sr-only">Back</span>
+                </Button>
+                <ModeToggle />
+            </div>
             <main className="flex flex-1 items-center justify-center p-4 sm:p-6 md:p-8"></main>
               <main className="flex flex-1 items-center justify-center p-4 sm:p-6 md:p-8">
                 <Card className="flex w-full max-w-md flex-col items-center gap-6 p-6 sm:p-8">
@@ -92,6 +104,7 @@ export default function AudioRecorder() {
                       setIsRecording(!isRecording) 
                       }} className="h-10 w-10" />}
                   </div>
+                  
                   <div className="grid gap-2 text-center">
                     <CardTitle>{isRecording ? "Stop Recording" : "Start Recording"}</CardTitle>
                     <CardDescription>{isRecording
@@ -188,6 +201,26 @@ function CircleStopIcon(props:any) {
     >
       <circle cx="12" cy="12" r="10" />
       <rect width="6" height="6" x="9" y="9" />
+    </svg>
+  )
+}
+
+function ArrowLeftIcon(props:any) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m12 19-7-7 7-7" />
+      <path d="M19 12H5" />
     </svg>
   )
 }

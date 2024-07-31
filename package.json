@@ -13,7 +13,9 @@
     "cf-typegen": "wrangler types --env-interface CloudflareEnv env.d.ts"
   },
   "dependencies": {
+    "@auth/core": "^0.34.1",
     "@radix-ui/react-collapsible": "^1.1.0",
+    "@radix-ui/react-dropdown-menu": "^2.1.1",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-progress": "^1.1.0",
     "@radix-ui/react-select": "^2.1.1",
@@ -22,7 +24,9 @@
     "clsx": "^2.1.1",
     "hono": "^4.4.10",
     "lucide-react": "^0.399.0",
-    "next": "14.1.0",
+    "next": "^14.2.5",
+    "next-auth": "^5.0.0-beta.19",
+    "next-themes": "^0.3.0",
     "react": "^18",
     "react-dom": "^18",
     "react-media-recorder": "^1.6.6",
@@ -40,7 +44,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
     "postcss": "^8",
-    "tailwindcss": "^3.4.4",
+    "tailwindcss": "^3.4.7",
     "typescript": "^5",
     "vercel": "^34.2.8",
     "wrangler": "^3.62.0"

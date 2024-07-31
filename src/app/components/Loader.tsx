@@ -13,6 +13,10 @@ export const Loader = () => {
         setIsLoading(60);
     }, 1000);
 
+    setTimeout(() => {
+      setIsLoading(70);
+  }, 2000);
+
   return (
     <div className="h-fit">
       <div className="bg-card text-card-foreground rounded-lg p-8 shadow-lg w-full max-w-md">

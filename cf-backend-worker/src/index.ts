@@ -72,7 +72,7 @@ app.get('/analysis', async (c) => {
   if (Object.keys(audioAnalysisResult).length === 0) {
     return c.json({ error: "Audio analysis not yet performed or no data available." });
   }
-
+  //@ts-ignore
   const ans = await c.env.AI.run('@cf/meta/llama-2-7b-chat-fp16',
     {
       messages: [
