@@ -2,7 +2,6 @@
 import React, { use } from 'react'
 import Image from 'next/image'
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible"
-import { ModeToggle } from './Togglemode'
 import { Button } from '@/components/ui/button'
 import { signIn } from 'next-auth/react'
 import { useSession } from 'next-auth/react'

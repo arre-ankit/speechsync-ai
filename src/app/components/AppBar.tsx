@@ -4,6 +4,8 @@ import { useSession,signOut, signIn } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { ModeToggle } from './Togglemode'
 
+export const runtime = 'edge'
+
 const AppBar = () => {
     const session = useSession()
   return (
