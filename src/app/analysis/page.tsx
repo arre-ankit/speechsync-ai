@@ -81,17 +81,7 @@ export default function AnalysisPage() {
     
   return (
     <div className="flex flex-col min-h-screen w-full">
-        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-        <div className="flex items-center justify-between gap-4">
-          <Button variant="outline" size="icon" onClick={()=>{
-            router.push('/dashboard');
-          }}>
-            <ArrowLeftIcon className="h-4 w-4" />
-            <span className="sr-only">Back</span>
-          </Button>
-          <h1 className="font-semibold text-lg md:text-xl">Analysis</h1>
-          <ModeToggle/>
-        </div>
+        <main className="flex flex-1 flex-col gap-4 my-3 p-4 md:gap-8 md:p-6">
         <div className="grid gap-6">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card className="flex flex-col">

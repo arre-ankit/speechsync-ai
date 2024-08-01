@@ -74,17 +74,8 @@ export default function AudioRecorder() {
       <ReactMediaRecorder
         audio
         render={({ status, startRecording, stopRecording, mediaBlobUrl }) => (
-          <div className={`flex min-h-screen w-full flex-col bg-background`}>
-            <div className="flex justify-between p-5">
-                <Button variant="outline" size="icon" onClick={()=>{
-                router.push('/');
-                }}>
-                <ArrowLeftIcon className="h-4 w-4" />
-                <span className="sr-only">Back</span>
-                </Button>
-                <ModeToggle />
-            </div>
-            <main className="flex flex-1 items-center justify-center p-4 sm:p-6 md:p-8"></main>
+          <div className='flex min-h-screen min-w-screen flex-auto justify-center bg-background'>
+            <main className="items-center justify-center p-4 sm:p-6 md:p-8"></main>
               <main className="flex flex-1 items-center justify-center p-4 sm:p-6 md:p-8">
                 <Card className="flex w-full max-w-md flex-col items-center gap-6 p-6 sm:p-8">
                 <p>{status}</p>

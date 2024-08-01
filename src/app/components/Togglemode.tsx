@@ -20,7 +20,7 @@ export function ModeToggle() {
       <DropdownMenuTrigger asChild>
         <Button variant='link' size="icon">
           {theme === "light" ? (
-            <Moon className="h-[1.2rem] w-[1.2rem] transition-transform transform scale-100" color="black" />
+            <Moon className="h-[1.5rem] w-[1.5rem] transition-transform transform scale-100" color="black" />
           ) : (
             null)}
           {theme === "dark" ? (
