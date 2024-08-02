@@ -11,3 +11,5 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   ],
   secret: process.env.NEXTAUTH_SECRET,
 })
+
+console.log(process.env.NEXTAUTH_SECRET)
