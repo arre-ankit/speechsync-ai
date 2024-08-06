@@ -36,6 +36,9 @@ const AppBar = () => {
         <div className='p-2 -py-1'>
             <ModeToggle />
         </div>
+        <div className='p-4 text-lg flex justify-center'>
+        {session?.data?.user?.name}
+        </div>
         <div className='p-2'>
         {session?.data?.user ? <Button onClick={()=>signOut()} >Logout</Button> : <Button onClick={()=>{signIn()}}>Login</Button>}
         </div>

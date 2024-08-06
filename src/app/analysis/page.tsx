@@ -1,11 +1,10 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
-import { ModeToggle } from '../components/Togglemode';
+import { useSession } from 'next-auth/react';
+
 
 
 export const runtime = 'edge'
@@ -20,7 +19,7 @@ interface AnalysisJsonType {
   summary: {
     correctPercentage: number;
     incorrectPercentage: number;
-    patterns: any[]; // Assuming patterns is an array, but the type of elements is unclear.
+    patterns: any[]; 
   },
   wordCount: number;
 }
@@ -29,6 +28,17 @@ export default function AnalysisPage() {
     const [analysisJson, setAnalysisJson] = useState<AnalysisJsonType>({} as any);
     const [audioUrl, setAudioUrl] = useState<string | null>(null);
     const router = useRouter();
+    const session = useSession({
+        required:true,
+        onUnauthenticated(){
+          router.push('/api/auth/signin')
+        }
+    }
+    )
+
+    if(!session){
+      return null
+    }
   
     useEffect(() => {
       const storedAnalysisResult = localStorage.getItem('audioAnalysis Result');

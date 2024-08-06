@@ -7,8 +7,6 @@ import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation'
 import { LoadingOverlay } from '@/app/components/LoadingOverlay'
-import { ModeToggle } from "./Togglemode";
-
 
 
 export const runtime = 'edge'
@@ -165,7 +163,6 @@ function MicIcon(props:any) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
     >
@@ -186,7 +183,6 @@ function CircleStopIcon(props:any) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
     >
@@ -206,7 +202,6 @@ function ArrowLeftIcon(props:any) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
     >

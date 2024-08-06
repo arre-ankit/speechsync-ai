@@ -1,17 +1,28 @@
-import React from 'react'
-import AudioRecorder from '@/app/components/AudioRecorder'
+'use client'
 
+import React from 'react'
+import { useSession } from 'next-auth/react'
+import { redirect } from 'next/navigation'
+import AudioRecorder from '@/app/components/AudioRecorder'
 
 export const runtime = 'edge'
 
-type Props = {}
 
-const Dashboard = (props: Props) => {
+export default function Dashboard() {
+  const session = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect('/api/auth/signin')
+    },
+  })
+
+  if (!session) {
+    return null
+  }
+
   return (
     <div>
-        <AudioRecorder />
+      <AudioRecorder />
     </div>
   )
 }
-
-export default Dashboard
