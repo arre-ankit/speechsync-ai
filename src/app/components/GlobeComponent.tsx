@@ -3,7 +3,6 @@ import React from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 
-export const runtime = 'edge'
 
 const World = dynamic(() => import("@/components/ui/globe").then((m) => m.World), {
   ssr: false,
@@ -397,8 +396,8 @@ const GlobeComponent = () => {
   ];
 
   return (
-    <div className="flex flex-row items-center justify-center py-20 h-screen md:h-auto dark:bg-black bg-white relative w-full">
-      <div className="max-w-7xl mx-auto w-full relative overflow-hidden h-full md:h-[40rem] px-4">
+    <div className="flex flex-row items-center justify-center relative">
+      <div className="flex w-full  md:h-[40rem] ">
         <motion.div
           initial={{
             opacity: 0,
