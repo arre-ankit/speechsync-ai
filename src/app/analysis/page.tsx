@@ -36,10 +36,6 @@ export default function AnalysisPage() {
     }
     )
 
-    if(!session){
-      return null
-    }
-  
     useEffect(() => {
       const storedAnalysisResult = localStorage.getItem('audioAnalysis Result');
       const storedAudioUrl = localStorage.getItem('audioUrl');
@@ -88,6 +84,12 @@ export default function AnalysisPage() {
         setAudioUrl(storedAudioUrl);
       }
     }, []);
+
+    
+    if(!session){
+      return null
+    }
+
     
   return (
     <div className="flex flex-col min-h-screen w-full">
