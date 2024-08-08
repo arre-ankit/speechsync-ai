@@ -1,50 +1,22 @@
 "use client";
 import React, { use } from 'react'
-import Image from 'next/image'
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible"
-import { Button } from '@/components/ui/button'
-import { signIn } from 'next-auth/react'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
 import Footor from './Footor';
+import Hero from './Hero';
+
+
+
 
 type Props = {}
 export const runtime = 'edge'
 
+
 const LandingPage = (props: Props) => {
-  const session = useSession()
-  const router = useRouter()
   return (
+    <div>
     <div className="flex flex-col min-h-100vh dark">
     <main className="flex-1">
-    <section className="w-100 py-12 md:py-24 lg:py-32 xl:py-48">
-      <div className="container px-4 md:px-6">
-        <div className="grid gap-6 lg:grid-cols-[1fr_300px] lg:gap-12 xl:grid-cols-[1fr_600px]">
-          <Image
-            src="/next.svg"
-            alt="Hero"
-            className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last lg:aspect-square "
-            width="550"
-            height="550"
-          />
-          <div className="flex flex-col justify-center space-y-4">
-            <div className="space-y-6">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                Sync Your Speech, Unlock Global Opportunities
-              </h1>
-              <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                AI-powered accent improvement for aspiring remote workers
-              </p>
-            </div>
-            <div className="flex flex-col gap-2 min-[400px]:flex-row">
-              {session.data?.user ? <Button onClick={()=>{router.push("/dashboard")}}>Go to Dashboard</Button> 
-              : <Button onClick={()=>{signIn("google")}}>Sign In</Button>
-              }
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <Hero />
     <section className="w-full py-12 md:py-24 lg:py-32 ">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
@@ -178,6 +150,7 @@ const LandingPage = (props: Props) => {
         </section>
   </main>
       <Footor />
+</div>
 </div>
   )
 }

@@ -1,3 +1,5 @@
+
+
 type Props = {}
 
 const Footor = (props: Props) => {
@@ -7,6 +9,7 @@ const Footor = (props: Props) => {
         Created by @arre_ankit
       </a>
   </footer>
+
   )
 }
 
