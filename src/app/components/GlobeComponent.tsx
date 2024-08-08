@@ -3,6 +3,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 
+export const runtime = 'edge'
+
 const World = dynamic(() => import("@/components/ui/globe").then((m) => m.World), {
   ssr: false,
 });

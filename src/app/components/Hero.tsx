@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation'
 import { FlipWords } from '@/components/ui/flip-words'
 import GlobeComponent from './GlobeComponent';
 
+export const runtime = 'edge'
+
 type Props = {}
 
 const Hero = (props: Props) => {
