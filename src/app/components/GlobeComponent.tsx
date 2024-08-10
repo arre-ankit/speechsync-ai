@@ -396,15 +396,15 @@ const GlobeComponent = () => {
   ];
 
   return (
-    <div className="flex flex-row items-center justify-center relative">
-      <div className="flex w-full  md:h-[40rem] ">
+    <div className="flex flex-row items-center justify-center relative md:-my-60 xl:-my-60">
+      <div className="flex w-full h-40 md:h-[40rem] ">
         <motion.div
           initial={{
             opacity: 0,
             y: 20,
           }}
           animate={{
-            opacity: 1,
+            opacity: 10,
             y: 0,
           }}
           transition={{
