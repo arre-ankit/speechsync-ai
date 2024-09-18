@@ -11,22 +11,7 @@ const AppBar = () => {
   return (
     <div className='border-b px-2 py-2 flex justify-between'>
         <a className="flex items-center justify-center py-2" href="/">
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            className="h-8 w-8"
-        >
-            <path d="M8.8 20v-4.1l1.9.2a2.3 2.3 0 0 0 2.164-2.1V8.3A5.37 5.37 0 0 0 2 8.25c0 2.8.656 3.054 1 4.55a5.77 5.77 0 0 1 .029 2.758L2 20"></path>
-            <path d="M19.8 17.8a7.5 7.5 0 0 0 .003-10.603"></path>
-            <path d="M17 15a3.5 3.5 0 0 0-.025-4.975"></path>
-        </svg>
+        <img src='/speechsync ai.png' width="90" height="90"></img>
         </a>
         <nav className="ml-auto flex gap-4 sm:gap-6 p-3">
         <a className="text-sm font-medium hover:underline underline-offset-4" href="https://github.com/arre-ankit/speechsync-ai">
