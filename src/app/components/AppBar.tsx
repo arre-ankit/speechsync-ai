@@ -12,7 +12,7 @@ const AppBar = () => {
   return (
     <div className='border-b px-2 py-2 flex justify-between'>
         <a className="flex items-center justify-center py-2" href="/">
-        <Image src='/speechsync ai.png' width="90" height="90" alt="speechsync-logo"></Image>
+        <Image src='/speechsync-ai.png' width="90" height="90" alt="speechsync-logo"></Image>
         </a>
         <nav className="ml-auto flex gap-4 sm:gap-6 p-3">
         <a className="text-sm font-medium hover:underline underline-offset-4" href="https://github.com/arre-ankit/speechsync-ai">
