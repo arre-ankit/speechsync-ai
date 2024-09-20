@@ -3,6 +3,7 @@ import React from 'react'
 import { useSession,signOut, signIn } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { ModeToggle } from './Togglemode'
+import Image from 'next/image'
 
 export const runtime = 'edge'
 
@@ -11,7 +12,7 @@ const AppBar = () => {
   return (
     <div className='border-b px-2 py-2 flex justify-between'>
         <a className="flex items-center justify-center py-2" href="/">
-        <img src='/speechsync ai.png' width="90" height="90"></img>
+        <Image src='/speechsync ai.png' width="90" height="90" alt="speechsync-logo"></Image>
         </a>
         <nav className="ml-auto flex gap-4 sm:gap-6 p-3">
         <a className="text-sm font-medium hover:underline underline-offset-4" href="https://github.com/arre-ankit/speechsync-ai">
