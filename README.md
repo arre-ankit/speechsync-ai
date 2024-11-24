@@ -1,5 +1,6 @@
 
-<img width="1058" alt="image" src="https://github.com/user-attachments/assets/912d47e8-59e5-45ce-833c-dd035ffbd5c1">
+![image](https://github.com/user-attachments/assets/e1ccd982-c6b4-4d89-85fd-0c80b5034bba)
+
 
 # SpeechSync AI
 Passionate about empowering global communication? Help us build the ultimate AI speech coach.
